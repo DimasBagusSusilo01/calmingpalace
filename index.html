@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Background</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Baskervville+SC&family=Sevillana&display=swap" rel="stylesheet">
+    <style>
+        .sevillana-regular {
+            font-family: "Baskervville SC", serif;
+            font-weight: 400;
+            font-style: normal;
+            font-size: 50px;
+        }
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+        }
+        .video-background {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(30%);
+        }
+        .content {
+            position: relative;
+            z-index: 1;
+            color: white;
+            text-align: center;
+            top: 17%;
+            transform: translateY(-50%);
+        }
+        .scroll-container {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            position: relative;
+            overflow-x: visible;
+            white-space: nowrap;
+            margin-top: 50px;
+            width: 100%;
+            padding: 0 10px;
+            top: 20%;
+        }
+        button {
+            width: 300px; 
+            height: 100px;
+            margin: 0 10px;
+            flex-shrink: 0; 
+        }
+    </style>
+</head>
+<body>
+    <video class="video-background" autoplay loop muted>
+        <source src="suket.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+    <div class="content">
+        <div class="sevillana-regular">Calming Palace</div>
+        <p>Ini adalah tempat dimana kamu bisa melepaskan penat, stress dan beban di pundakmu ;)</p>
+    </div>
+    <div class="scroll-container">
+        <button>Button 1</button>
+        <button>Button 2</button>
+        <button>Button 3</button>
+        <button>Button 4</button>
+        <button>Button 5</button>
+        <button>Button 6</button>
+    </div>
+</body>
+</html>
