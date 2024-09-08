@@ -36,8 +36,9 @@
             transform: translateY(-50%);
         }
         .scroll-container {
+            
             display: flex;
-            justify-content: flex-start;
+            justify-content: center;
             align-items: center;
             position: relative;
             overflow-x: auto;
@@ -45,7 +46,7 @@
             margin-top: 50px;
             width: 100%;
             padding: 0 10px;
-            top: 20%;
+            top: 5%;
         }
         .scroll-container::-webkit-scrollbar{
             display: none;
@@ -79,6 +80,18 @@
             font-size: 20px;
             font-family: "Baskervville SC", serif;
         }
+        canvas {
+            border: 1px solid black;
+            cursor: crosshair;
+        }
+
+        .controls {
+            top: 10%;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
     </style>
 </head>
 <body>
@@ -104,23 +117,89 @@
                 Your browser does not support the video tag.
             </video>
             <div class="video-button-text">Api Unggun</div>
-        </div>
+        </div></div>
 
     <audio id="hujan" src="suhujan.mp3" loop></audio>
     <audio id="apiunggun" src="suaraapiunggun.mp3" loop></audio>
+
+    <div class="controls">
+        <input type="color" id="colorPicker" value="#000000">
+        <canvas id="drawingCanvas" width="300" height="150"></canvas>
+        <button id="saveBtn">Save as JPG</button>
+    </div>
 
     <script>
         var audios = [document.getElementById("hujan"), document.getElementById("apiunggun")];
 
         function playSound(id) {
+            // Hentikan semua audio yang sedang diputar
             audios.forEach(function(audio) {
                 audio.pause();
                 audio.currentTime = 0;
             });
 
+            // Putar audio yang dipilih
             var audio = document.getElementById(id);
             audio.play();
         }
     </script>
+    <script>
+        // Mendapatkan elemen dari HTML
+    const canvas = document.getElementById('drawingCanvas');
+    const ctx = canvas.getContext('2d');
+    const colorPicker = document.getElementById('colorPicker');
+    const saveBtn = document.getElementById('saveBtn');
+
+// Pengaturan default
+    let drawing = false;
+    let color = '#000000'; // Warna default hitam
+
+// Fungsi mulai menggambar
+    function startDrawing(e) {
+        drawing = true;
+        draw(e); // Agar langsung menggambar saat mouse di tekan
+}
+
+// Fungsi berhenti menggambar
+    function stopDrawing() {
+        drawing = false;
+        ctx.beginPath(); // Mengakhiri path ketika mouse diangkat
+}
+
+// Fungsi menggambar
+    function draw(e) {
+        if (!drawing) return;
+
+        ctx.lineWidth = 5;
+        ctx.lineCap = 'round';
+        ctx.strokeStyle = color;
+
+        ctx.lineTo(e.clientX - canvas.offsetLeft, e.clientY - canvas.offsetTop);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(e.clientX - canvas.offsetLeft, e.clientY - canvas.offsetTop);
+}
+
+// Event untuk menggambar menggunakan mouse
+    canvas.addEventListener('mousedown', startDrawing);
+    canvas.addEventListener('mousemove', draw);
+    canvas.addEventListener('mouseup', stopDrawing);
+    canvas.addEventListener('mouseout', stopDrawing);
+
+// Fungsi untuk memilih warna
+    colorPicker.addEventListener('input', (e) => {
+        color = e.target.value;
+});
+
+// Fungsi untuk menyimpan gambar sebagai JPG
+    saveBtn.addEventListener('click', () => {
+        const dataURL = canvas.toDataURL('image/jpeg', 1.0); // Mendapatkan data URL gambar
+        const link = document.createElement('a');
+        link.href = dataURL;
+        link.download = 'drawing.jpg';
+        link.click(); // Simpan gambar sebagai file JPG
+});
+    </script>
+    
 </body>
 </html>
