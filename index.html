@@ -56,6 +56,15 @@
             margin: 0 10px;
             flex-shrink: 0; 
         }
+        #background-video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            min-width: 100%;
+            min-height: 100%;
+            z-index: -1;
+            object-fit: cover;
+}
     </style>
 </head>
 <body>
@@ -68,7 +77,7 @@
         <p>Ini adalah tempat dimana kamu bisa melepaskan penat, stress dan beban di pundakmu ;)</p>
     </div>
     <div class="scroll-container">
-        <button><video autoplay loop muted>
+        <button><video autoplay loop muted id="background-video">
         <source src="suket.mp4" type="video/mp4">
         Your browser does not support the video tag.
     </video></button>
