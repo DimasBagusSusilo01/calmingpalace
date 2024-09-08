@@ -72,8 +72,8 @@
         }
         .video-button-text {
             position: relative;
-            bottom: -20px;
-            left: 120px;
+            text-align: center;
+            top: 10%;
             color: white;
             z-index: 1;
             font-size: 20px;
@@ -91,35 +91,36 @@
         <p>Ini adalah tempat dimana kamu bisa melepaskan penat, stress dan beban di pundakmu ;)</p>
     </div>
     <div class="scroll-container">
-        <div class="video-button" onclick="suarahujan()">
+        <div class="video-button" onclick="playSound('hujan')">
             <video autoplay loop muted>
                 <source src="hujan.mp4" type="video/mp4">
                 Your browser does not support the video tag.
             </video>
-            <div class="video-button-text">hujan</div>
+            <div class="video-button-text">Hujan</div>
         </div>
-        <audio id="sound" src="suhujan.mp3" loop></audio>
-        <script>
-            function suarahujan() {
-                var audio = document.getElementById("sound");
-                audio.play();
-            }
-        </script>
-        <div class="video-button">
-            <div class="video-button-text">Malam</div>
+        <div class="video-button" onclick="playSound('apiunggun')">
+            <video autoplay loop muted>
+                <source src="apiunggun.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <div class="video-button-text">Api Unggun</div>
         </div>
-        <div class="video-button">
-            <div class="video-button-text">Button 3</div>
-        </div>
-        <div class="video-button">
-            <div class="video-button-text">Button 4</div>
-        </div>
-        <div class="video-button">
-            <div class="video-button-text">Button 5</div>
-        </div>
-        <div class="video-button">
-            <div class="video-button-text">Button 6</div>
-        </div>
-    </div>
+
+    <audio id="hujan" src="suhujan.mp3" loop></audio>
+    <audio id="apiunggun" src="suaraapiunggun.mp3" loop></audio>
+
+    <script>
+        var audios = [document.getElementById("hujan"), document.getElementById("apiunggun")];
+
+        function playSound(id) {
+            audios.forEach(function(audio) {
+                audio.pause();
+                audio.currentTime = 0;
+            });
+
+            var audio = document.getElementById(id);
+            audio.play();
+        }
+    </script>
 </body>
 </html>
