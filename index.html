@@ -125,7 +125,9 @@
     <div class="controls">
         <input type="color" id="colorPicker" value="#000000">
         <canvas id="drawingCanvas" width="300" height="150"></canvas>
-        <button id="saveBtn">Save as JPG</button>
+        <button id="saveBtn">Simpan Sebagai JPG</button>
+        <button id="eraser">Penghapus</button>
+        <button id="clearCanvas">Hapus Semua</button>
     </div>
 
     <script>
@@ -144,61 +146,93 @@
         }
     </script>
     <script>
-        // Mendapatkan elemen dari HTML
-    const canvas = document.getElementById('drawingCanvas');
-    const ctx = canvas.getContext('2d');
-    const colorPicker = document.getElementById('colorPicker');
-    const saveBtn = document.getElementById('saveBtn');
+        const canvas = document.getElementById('drawingCanvas');
+const ctx = canvas.getContext('2d');
+const colorPicker = document.getElementById('colorPicker');
+const eraser = document.getElementById('eraser');
+const clearCanvas = document.getElementById('clearCanvas');
 
-// Pengaturan default
-    let drawing = false;
-    let color = '#000000'; // Warna default hitam
+// Variabel untuk menyimpan status
+let drawing = false;
+let currentColor = colorPicker.value;
+let erasing = false;
 
-// Fungsi mulai menggambar
-    function startDrawing(e) {
-        drawing = true;
-        draw(e); // Agar langsung menggambar saat mouse di tekan
+// Fungsi untuk mendapatkan posisi mouse atau sentuhan
+function getPosition(event) {
+    let x, y;
+
+    if (event.touches) {  // Jika menggunakan layar sentuh
+        x = event.touches[0].clientX - canvas.getBoundingClientRect().left;
+        y = event.touches[0].clientY - canvas.getBoundingClientRect().top;
+    } else {  // Jika menggunakan mouse
+        x = event.offsetX;
+        y = event.offsetY;
+    }
+
+    return { x, y };
 }
 
-// Fungsi berhenti menggambar
-    function stopDrawing() {
-        drawing = false;
-        ctx.beginPath(); // Mengakhiri path ketika mouse diangkat
+// Fungsi untuk memulai menggambar
+function startDrawing(event) {
+    drawing = true;
+    const pos = getPosition(event);
+    ctx.beginPath();
+    ctx.moveTo(pos.x, pos.y);
 }
 
-// Fungsi menggambar
-    function draw(e) {
-        if (!drawing) return;
+// Fungsi untuk menggambar
+function draw(event) {
+    if (!drawing) return;
 
-        ctx.lineWidth = 5;
-        ctx.lineCap = 'round';
-        ctx.strokeStyle = color;
-
-        ctx.lineTo(e.clientX - canvas.offsetLeft, e.clientY - canvas.offsetTop);
-        ctx.stroke();
-        ctx.beginPath();
-        ctx.moveTo(e.clientX - canvas.offsetLeft, e.clientY - canvas.offsetTop);
+    const pos = getPosition(event);
+    ctx.lineTo(pos.x, pos.y);
+    ctx.strokeStyle = erasing ? '#FFFFFF' : currentColor;
+    ctx.lineWidth = erasing ? 20 : 2;
+    ctx.stroke();
 }
 
-// Event untuk menggambar menggunakan mouse
-    canvas.addEventListener('mousedown', startDrawing);
-    canvas.addEventListener('mousemove', draw);
-    canvas.addEventListener('mouseup', stopDrawing);
-    canvas.addEventListener('mouseout', stopDrawing);
+// Fungsi untuk berhenti menggambar
+function stopDrawing() {
+    drawing = false;
+    ctx.closePath();
+}
 
-// Fungsi untuk memilih warna
-    colorPicker.addEventListener('input', (e) => {
-        color = e.target.value;
+// Event listener untuk mouse
+canvas.addEventListener('mousedown', startDrawing);
+canvas.addEventListener('mousemove', draw);
+canvas.addEventListener('mouseup', stopDrawing);
+
+// Event listener untuk touchscreen
+canvas.addEventListener('touchstart', (event) => {
+    event.preventDefault();  // Mencegah scroll atau zoom saat menggambar
+    startDrawing(event);
+});
+canvas.addEventListener('touchmove', (event) => {
+    event.preventDefault();  // Mencegah scroll atau zoom saat menggambar
+    draw(event);
+});
+canvas.addEventListener('touchend', (event) => {
+    event.preventDefault();  // Mencegah scroll atau zoom saat menggambar
+    stopDrawing();
 });
 
-// Fungsi untuk menyimpan gambar sebagai JPG
-    saveBtn.addEventListener('click', () => {
-        const dataURL = canvas.toDataURL('image/jpeg', 1.0); // Mendapatkan data URL gambar
-        const link = document.createElement('a');
-        link.href = dataURL;
-        link.download = 'drawing.jpg';
-        link.click(); // Simpan gambar sebagai file JPG
+// Update warna saat pengguna memilih warna baru
+colorPicker.addEventListener('input', (e) => {
+    currentColor = e.target.value;
+    erasing = false; // Matikan penghapus saat memilih warna baru
 });
+
+// Aktifkan penghapus
+eraser.addEventListener('click', () => {
+    erasing = true;
+});
+
+// Fungsi untuk membersihkan canvas
+clearCanvas.addEventListener('click', () => {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+});
+        
+        
     </script>
     
 </body>
